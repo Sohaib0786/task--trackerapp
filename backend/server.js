@@ -5,6 +5,9 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
+const morgan = require("morgan");
+const logger = require("./utils/logger");
+
 
 // ==================
 // Load env variables
@@ -35,6 +38,14 @@ app.use(helmet());
 // ==================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  morgan("combined", {
+    stream: {
+      write: (message) => logger.info(message.trim()),
+    },
+  })
+);
+
 
 // ==================
 // Rate Limiting

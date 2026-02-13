@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/apple/Documents/Frontend develoer task/backend/logs/.a2eb83d798e0b0c10f70b5011b5a894931cc7428-audit.json",
+    "files": [
+        {
+            "date": 1770995861367,
+            "name": "/Users/apple/Documents/Frontend develoer task/backend/logs/combined-2026-02-13.log",
+            "hash": "9a264bf4761b732e81c9814dfaa062b5f88cc3f837acae57bc3c44dabd78ec5c"
+        }
+    ],
+    "hashType": "sha256"
+}
