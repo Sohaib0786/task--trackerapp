@@ -12,20 +12,17 @@ const errorHandler = require("./middleware/errorHandler");
 dotenv.config();
 
 // ==================
-// Connect DB
+// Connect Database
 // ==================
 connectDB();
 
 const app = express();
 
 // ==================
-// CORS (Keep simple for dev)
+// CORS (Simplified & Correct)
 // ==================
 app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
-  })
+  cors()
 );
 
 // ==================
@@ -43,8 +40,12 @@ app.use(express.urlencoded({ extended: true }));
 // Rate Limiting
 // ==================
 const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
+  windowMs: 10 * 60 * 1000, // 10 minutes
   max: 100,
+  message: {
+    success: false,
+    message: "Too many requests, please try again later.",
+  },
 });
 
 app.use("/api", limiter);
@@ -56,17 +57,18 @@ app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/tasks", require("./routes/taskRoutes"));
 
 // ==================
-// Health Route
+// Health Check Route
 // ==================
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
     message: "Server is running",
+    timestamp: new Date().toISOString(),
   });
 });
 
 // ==================
-// 404 Handler (MUST be after routes)
+// 404 Handler
 // ==================
 app.use((req, res) => {
   res.status(404).json({
@@ -76,24 +78,26 @@ app.use((req, res) => {
 });
 
 // ==================
-// Global Error Handler (LAST middleware)
+// Global Error Handler
 // ==================
 app.use(errorHandler);
 
 // ==================
 // Start Server
 // ==================
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 const server = app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`);
+  console.log(
+    `✅ Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`
+  );
 });
 
 // ==================
 // Handle Unhandled Rejections
 // ==================
 process.on("unhandledRejection", (err) => {
-  console.error(`Unhandled Rejection: ${err.message}`);
+  console.error(`❌ Unhandled Rejection: ${err.message}`);
   server.close(() => process.exit(1));
 });
 
